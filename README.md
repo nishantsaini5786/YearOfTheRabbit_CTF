@@ -486,230 +486,34 @@ THM{8d6f163a87a1c80de27a4fd61aef0f3a0ecf9161}
 ---
 
 <div align="center">
-
-### 🔍 Step 1 — Reconnaissance
-
-<!-- 📸 IMAGE 1: nmap full scan showing FTP 21, SSH 22, HTTP 80 -->
-<img src="./images/01-nmap-scan.png" alt="Step 1a — Nmap Full Scan" width="850"/>
-
-*Step 1a — `nmap -sC -sV -p-` reveals FTP 21, SSH 22, HTTP 80*
-
-</div>
-
----
-
-<div align="center">
-
-### 📂 Step 2 — Web Directory Enumeration
-
-<!-- 📸 IMAGE 2: feroxbuster output discovering /assets/ -->
-<img src="./images/02-feroxbuster.png" alt="Step 2a — Feroxbuster Directory Discovery" width="850"/>
-
-*Step 2a — `feroxbuster` finds `/assets/` with directory listing enabled*
-
-<br>
-
-<!-- 📸 IMAGE 3: browser showing /assets/ open directory listing -->
-<img src="./images/03-assets-listing.png" alt="Step 2b — Open /assets/ Directory" width="850"/>
-
-*Step 2b — Open `/assets/` directory listing exposes `style.css`*
-
-</div>
-
----
-
-<div align="center">
-
-### 🎨 Step 3 — CSS Comment Hint
-
-<!-- 📸 IMAGE 4: style.css source showing hidden comment -->
-<img src="./images/04-css-hint.png" alt="Step 3a — CSS Comment Hint" width="850"/>
-
-*Step 3a — `style.css` comment reveals `/sup3r_s3cr3t_fl4g.php`*
-
-<br>
-
-<!-- 📸 IMAGE 5: browser visiting sup3r_s3cr3t_fl4g.php with JS alert -->
-<img src="./images/05-js-alert.png" alt="Step 3b — JS Alert Page" width="850"/>
-
-*Step 3b — Hidden page shows only a JavaScript "turn off JS" alert*
-
-</div>
-
----
-
-<div align="center">
-
-### 🧩 Step 4 — Client-Side Bypass via DevTools
-
-<!-- 📸 IMAGE 6: Firefox DevTools Network tab showing intermediary.php redirect -->
-<img src="./images/06-devtools-network.png" alt="Step 4a — DevTools Network Tab" width="850"/>
-
-*Step 4a — Network tab reveals `intermediary.php?hidden_directory=/WExYY2Cv-qU`*
-
-<br>
-
-<!-- 📸 IMAGE 7: browser visiting hidden directory showing Hot_Babe.png -->
-<img src="./images/07-hidden-directory.png" alt="Step 4b — Hidden Directory Contents" width="850"/>
-
-*Step 4b — Hidden directory `/WExYY2Cv-qU/` contains `Hot_Babe.png`*
-
-</div>
-
----
-
-<div align="center">
-
-### 🖼️ Step 5 — Steganography Extraction
-
-<!-- 📸 IMAGE 8: exiftool / strings on Hot_Babe.png -->
-<img src="./images/08-exiftool.png" alt="Step 5a — Analyzing Hot_Babe.png" width="850"/>
-
-*Step 5a — Analyzing `Hot_Babe.png` for embedded data*
-
-<br>
-
-<!-- 📸 IMAGE 9: steghide extract command output -->
-<img src="./images/09-steghide-extract.png" alt="Step 5b — Steghide Extraction" width="850"/>
-
-*Step 5b — `steghide extract` retrieves `hotbaby.txt` wordlist*
-
-<br>
-
-<!-- 📸 IMAGE 10: hotbaby.txt contents (82 passwords) -->
-<img src="./images/10-hotbaby-wordlist.png" alt="Step 5c — Extracted Wordlist" width="850"/>
-
-*Step 5c — Custom wordlist `hotbaby.txt` (82 candidates) for FTP bruteforce*
-
-</div>
-
----
-
-<div align="center">
-
-### 🔓 Step 6 — FTP Brute Force with Hydra
-
-<!-- 📸 IMAGE 11: hydra command + successful FTP password recovery -->
-<img src="./images/11-hydra-ftp.png" alt="Step 6a — Hydra FTP Bruteforce" width="850"/>
-
-*Step 6a — `hydra` recovers FTP password `5iez1wGXKfPKQ` for `ftpuser`*
-
-<br>
-
-<!-- 📸 IMAGE 12: FTP login + Eli's_Creds.txt download -->
-<img src="./images/12-ftp-download.png" alt="Step 6b — FTP Download" width="850"/>
-
-*Step 6b — Logging into FTP and downloading `Eli's_Creds.txt`*
-
-</div>
-
----
-
-<div align="center">
-
-### 🧠 Step 7 — Brainfuck Decoding
-
-<!-- 📸 IMAGE 13: Eli's_Creds.txt raw brainfuck content -->
-<img src="./images/13-brainfuck-source.png" alt="Step 7a — Brainfuck Source" width="850"/>
-
-*Step 7a — `Eli's_Creds.txt` contains raw Brainfuck code*
-
-<br>
-
-<!-- 📸 IMAGE 14: dCode Brainfuck interpreter decoded output -->
-<img src="./images/14-brainfuck-decoded.png" alt="Step 7b — Brainfuck Decoded" width="850"/>
-
-*Step 7b — dCode Brainfuck interpreter decodes to `eli:DSpDiMlwAEwid`*
-
-<br>
-
-<!-- 📸 IMAGE 15: SSH login as eli + MOTD hint -->
-<img src="./images/15-ssh-eli.png" alt="Step 7c — SSH as eli + MOTD Hint" width="850"/>
-
-*Step 7c — SSH login as `eli`; banner leaks hint about a "leet s3cr3t"*
-
-</div>
-
----
-
-<div align="center">
-
-### 🔑 Step 8 — Lateral Movement to gwendoline
-
-<!-- 📸 IMAGE 16: find / -name "s3cr3t" result -->
-<img src="./images/16-find-secret.png" alt="Step 8a — Finding the Hidden Note" width="850"/>
-
-*Step 8a — `find / -name "s3cr3t"` locates `/usr/games/s3cr3t`*
-
-<br>
-
-<!-- 📸 IMAGE 17: cat hidden note revealing gwendoline password -->
-<img src="./images/17-hidden-note.png" alt="Step 8b — Hidden Note Contents" width="850"/>
-
-*Step 8b — Hidden note leaks `gwendoline` password `MniVCQVhQHUNI`*
-
-<br>
-
-<!-- 📸 IMAGE 18: su gwendoline success + user.txt captured -->
-<img src="./images/18-su-gwendoline.png" alt="Step 8c — su gwendoline" width="850"/>
-
-*Step 8c — `su gwendoline` succeeds; `user.txt` captured*
-
-</div>
-
----
-
-<div align="center">
-
-### 🧬 Step 9 — Privilege Escalation via Sudo UID Bypass
-
-<!-- 📸 IMAGE 19: sudo -l showing (ALL, !root) NOPASSWD: /usr/bin/vi -->
-<img src="./images/19-sudo-l.png" alt="Step 9a — Sudo Permissions" width="850"/>
-
-*Step 9a — `sudo -l` shows `(ALL, !root) NOPASSWD: /usr/bin/vi`*
-
-<br>
-
-<!-- 📸 IMAGE 20: sudo -u#-1 /usr/bin/vi escalation -->
-<img src="./images/20-sudo-uid-bypass.png" alt="Step 9b — Sudo UID Bypass" width="850"/>
-
-*Step 9b — `sudo -u#-1 /usr/bin/vi` bypasses the `!root` exclusion*
-
-<br>
-
-<!-- 📸 IMAGE 21: root shell gained via vi :!/bin/sh -->
-<img src="./images/21-root-shell.png" alt="Step 9c — Root Shell via vi" width="850"/>
-
-*Step 9c — Escape from `vi` with `:!/bin/sh` → root shell 🎯*
-
-</div>
-
----
-
-<div align="center">
-
-### 🏆 Step 10 — Root Proof
-
-<!-- 📸 IMAGE 22: whoami showing root -->
-<img src="./images/22-whoami-root.png" alt="Step 10a — whoami = root" width="850"/>
-
-*Step 10a — `whoami` confirms `root`*
-
-<br>
-
-<!-- 📸 IMAGE 23: /root/root.txt contents -->
-<img src="./images/23-root-flag.png" alt="Step 10b — Root Flag" width="850"/>
-
-*Step 10b — `root.txt` captured — full root compromise confirmed*
-
-<br>
-
-<!-- 📸 IMAGE 24: id output showing uid=0(root) -->
-<img src="./images/24-id-root.png" alt="Step 10c — id = uid=0(root)" width="850"/>
-
-*Step 10c — `id` returns `uid=0(root) gid=0(root)`*
-
-</div>
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_20_50_50" src="https://github.com/user-attachments/assets/065c8224-d0e9-49ca-8bbf-91f52469adef" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_20_51_15" src="https://github.com/user-attachments/assets/6fae233a-efc3-42b1-96e6-cb3603cdff72" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_20_55_47" src="https://github.com/user-attachments/assets/11dbc844-e3b1-42df-8535-cacf9d4328eb" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_20_56_04" src="https://github.com/user-attachments/assets/df806f3d-825b-4b2a-a5a0-719e8b47e507" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_20_58_37" src="https://github.com/user-attachments/assets/de89fe9c-3937-4395-b732-dd217d5d1f3d" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_20_59_33" src="https://github.com/user-attachments/assets/5e74a31a-0fdc-4fef-b32d-4130bb4738e0" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_03_51" src="https://github.com/user-attachments/assets/8e57d607-cdc4-44ee-b237-90362e743793" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_20_01" src="https://github.com/user-attachments/assets/054b4e37-72d3-4516-96fc-dd8a1c7caa61" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_26_49" src="https://github.com/user-attachments/assets/6975b4af-3627-492f-aca9-0f7ce112cf7c" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_30_28" src="https://github.com/user-attachments/assets/4c543d44-5b4f-4423-9395-6edd15a72955" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_31_27" src="https://github.com/user-attachments/assets/7a4d7c81-c4e4-42c6-ba15-fbddd1bb6a80" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_32_07" src="https://github.com/user-attachments/assets/450f7aef-b725-44bb-a928-95fa12f383dd" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_33_35" src="https://github.com/user-attachments/assets/b138cf3f-4389-41e6-8382-e945dbbc1a9f" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_38_06" src="https://github.com/user-attachments/assets/bcd50790-0c82-4c38-8903-7ab7b54a21c1" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_39_45" src="https://github.com/user-attachments/assets/d24ae099-2f4d-4004-8461-d762bad3a595" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_41_24" src="https://github.com/user-attachments/assets/79d08c1e-e5b7-4e34-93f7-cf390f5e7806" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_44_22" src="https://github.com/user-attachments/assets/b5ac1e0f-8fff-4fec-a893-283140a89de6" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_45_20" src="https://github.com/user-attachments/assets/e4e1b321-b57d-4a83-95f2-59af37d14d03" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_47_11" src="https://github.com/user-attachments/assets/2f8b0f65-e3df-4601-93d5-89713e50454d" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_49_33" src="https://github.com/user-attachments/assets/c6a4adb7-5b4f-4523-862c-cee654800d72" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_54_01" src="https://github.com/user-attachments/assets/2f2328bb-cbfe-4b77-8943-98418ab4d728" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_54_25" src="https://github.com/user-attachments/assets/59519f07-ed88-400a-b5f1-f1eb09adeba2" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_56_48" src="https://github.com/user-attachments/assets/6b711fa3-e8f7-4b99-b425-d51acb314d85" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_21_58_13" src="https://github.com/user-attachments/assets/8ddd0726-ef46-4894-9fbd-6b32b93e1540" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_22_02_03" src="https://github.com/user-attachments/assets/31319399-6751-4121-8858-67eea0f3649d" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_22_05_25" src="https://github.com/user-attachments/assets/1d1c8dec-e01b-486b-befc-9a26b705d289" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_22_11_15" src="https://github.com/user-attachments/assets/78dd02fc-7f24-4314-a949-211f8e160399" />
+<img width="1920" height="1080" alt="Screenshot_2026-09-28_22_12_22" src="https://github.com/user-attachments/assets/0b78bfe3-9d4e-4342-8b8c-d23e665be5d7" />
 
 ---
 
